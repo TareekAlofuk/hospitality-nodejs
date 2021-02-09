@@ -3,7 +3,7 @@ const router = express.Router()
 const ItemController = require('../Controllers/ItemsController')
 
 router.post('/AddItem', ItemController.AddItem);
-router.patch('/EditItem/:itemId', ItemController.UpdateItem);
+router.patch('/UpdateItem/:itemId', ItemController.UpdateItem);
 router.delete('/DeleteItem/:itemId', ItemController.DeleteItem);
 router.get('/', ItemController.showItems);
 router.get('/:itemId', ItemController.showItem);

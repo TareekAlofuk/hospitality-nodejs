@@ -30,7 +30,6 @@ exports.AddItem = async (req, res) => {
         isActive: req.body.isActive
     })
 
-
     try {
         const savedItem = await item.save()
         res.json({data: savedItem})
