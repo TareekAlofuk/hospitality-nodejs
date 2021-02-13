@@ -3,11 +3,15 @@ const express = require("express")
 const mongoose = require("mongoose")
 const ItemRoutes = require('./Routes/ItemRoutes')
 const ItemTypeRoutes = require('./Routes/ItemTypeRoutes')
+const RoomRoutes = require('./Routes/RoomRoutes')
+const cors = require('cors')
 const app = express()
 
+app.use(cors());
 app.use(express.json())
 app.use('/api/Item', ItemRoutes)
 app.use('/api/ItemType', ItemTypeRoutes)
+app.use('/api/Room', RoomRoutes)
 
 
 mongoose.connect(process.env.DB_CONNECTION_URL, {

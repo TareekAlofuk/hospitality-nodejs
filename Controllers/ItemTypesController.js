@@ -2,6 +2,7 @@ const ItemType = require('./../Models/ItemTypeModel')
 
 
 exports.showItemTypes = async (req, res) => {
+
     try {
         const items = await ItemType.find()
         res.json(items)
@@ -20,7 +21,9 @@ exports.AddItemType = async (req, res) => {
         const savedItemType = await itemType.save()
         res.json({data: savedItemType})
     } catch (e) {
-        res.json({error: e})
+        res.status(400).send({
+            error : e
+        });
     }
 }
 

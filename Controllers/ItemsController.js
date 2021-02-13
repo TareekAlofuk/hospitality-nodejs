@@ -46,7 +46,7 @@ exports.UpdateItem = async (req, res) => {
         console.log(item)
         Object.assign(item, newItem)
         const updatedItem = await item.save();
-        res.send({data: updatedItem})
+        res.json({data: updatedItem})
     } catch (e) {
         res.json({error: e})
     }
