@@ -13,7 +13,8 @@ const ItemSchema = new Schema({
         required: true
     },
     image: {
-        type: String
+        type: String,
+        required: true
     },
     isActive: {
         type: Boolean,

@@ -13,6 +13,7 @@ app.use('/api/Item', ItemRoutes)
 app.use('/api/ItemType', ItemTypeRoutes)
 app.use('/api/Room', RoomRoutes)
 
+app.use(express.static('StaticFileServer'))
 
 mongoose.connect(process.env.DB_CONNECTION_URL, {
     useNewUrlParser: true,
