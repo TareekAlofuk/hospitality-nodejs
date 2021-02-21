@@ -4,6 +4,7 @@ const mongoose = require("mongoose")
 const ItemRoutes = require('./Routes/ItemRoutes')
 const ItemTypeRoutes = require('./Routes/ItemTypeRoutes')
 const RoomRoutes = require('./Routes/RoomRoutes')
+const AdminRoutes = require('./Routes/AdminRoutes')
 const cors = require('cors')
 const app = express()
 
@@ -12,6 +13,7 @@ app.use(express.json())
 app.use('/api/Item', ItemRoutes)
 app.use('/api/ItemType', ItemTypeRoutes)
 app.use('/api/Room', RoomRoutes)
+app.use('/api/Admin', AdminRoutes)
 
 app.use(express.static('StaticFileServer'))
 
