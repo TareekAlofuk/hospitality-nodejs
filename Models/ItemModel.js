@@ -19,10 +19,6 @@ const ItemSchema = new Schema({
     isActive: {
         type: Boolean,
         default: true
-    },
-    Date: {
-        type: Date,
-        default: Date.now
     }
 })
 ItemSchema.plugin(uniqueValidator);

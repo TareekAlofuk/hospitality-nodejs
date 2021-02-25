@@ -6,8 +6,7 @@ exports.showAdmins = async (req, res) => {
 
     try {
         let admins = await Admin.find()
-        admins= admins.map(admin => {
-            return flatten(admin, {maxDepth: 1})
+        admins= admins.map(admin => {return flatten(admin, {maxDepth: 1})
         })
         res.status(200).json(admins)
 
