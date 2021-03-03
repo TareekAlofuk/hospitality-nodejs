@@ -5,7 +5,6 @@ const uniqueValidator = require('mongoose-unique-validator');
 const OrderSchema = new Schema({
     items: [{
         itemName: {type: String, required: true},
-        note: {type: String},
         count: {type: Number, required: true}
     }],
     client: {
@@ -16,7 +15,11 @@ const OrderSchema = new Schema({
         type: Boolean,
         required: true
     },
-
+    note: {type: String},
+    status:{
+        type:String ,
+        default:"waiting"
+    },
     date: {
         type: Date,
         default: Date.now

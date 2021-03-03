@@ -13,6 +13,16 @@ exports.showItems = async (req, res) => {
     }
 }
 
+
+exports.showActiveItems = async (req, res) => {
+    try {
+        const ActiveItems = await Item.find({isActive: true})
+        res.json(ActiveItems)
+    } catch (e) {
+        res.json({error: e})
+    }
+}
+
 exports.showItem = async (req, res) => {
     try {
         const item = await Item.findById(req.params.itemId);
@@ -25,9 +35,9 @@ exports.showItem = async (req, res) => {
 
 
 exports.AddItem = async (req, res) => {
-
+    console.log(req.body)
     const item = new Item({
-        name: req.body.name,
+        itemName: req.body.itemName,
         type: req.body.type,
         image: 'req.body.image',
         isActive: req.body.isActive

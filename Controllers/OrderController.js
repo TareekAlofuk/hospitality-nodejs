@@ -2,7 +2,6 @@ const Order = require('./../Models/OrderModel')
 
 
 exports.showOrders = async (req, res) => {
-
     try {
         const orders = await Order.find()
         res.status(200).json(orders)

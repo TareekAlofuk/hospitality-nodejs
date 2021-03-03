@@ -18,7 +18,7 @@ app.use('/api/Order', OrderRoutes)
 
 app.use(express.static('StaticFileServer'))
 
-mongoose.connect(process.env.DB_CONNECTION_URL, {
+mongoose.connect('mongodb://127.0.0.1:27017/HospitalitySystem', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
@@ -34,7 +34,7 @@ db.once('open', () => {
 });
 
 
-app.listen(process.env.PORT, () => {
-    console.log("Server started: 3100")
+app.listen(3100, () => {
+    console.log("Server started:3100")
 })
 

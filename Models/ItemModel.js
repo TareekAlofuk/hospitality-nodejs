@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const uniqueValidator = require('mongoose-unique-validator');
 
 const ItemSchema = new Schema({
-    name: {
+    itemName: {
         type: String,
         required: true,
         unique: true
