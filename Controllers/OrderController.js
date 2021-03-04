@@ -1,6 +1,8 @@
 const Order = require('./../Models/OrderModel')
 
 
+
+
 exports.showOrders = async (req, res) => {
     try {
         const orders = await Order.find()
@@ -10,8 +12,47 @@ exports.showOrders = async (req, res) => {
     }
 }
 
+exports.showOrder= async (req, res) => {
+    const _id = req.params._id ;
+    try {
+        const order = await Order.findById(_id)
+        res.status(200).json(order)
+    } catch (e) {
+        res.status(400).json({error: e})
+    }
+}
 
-exports.AddOrder = async (req, res) => {
+
+
+exports.showWaitingOrder = async (req , res) => {
+    try {
+        const orders = await Order.find({status:"waiting"})
+        res.status(200).json(orders)
+    } catch (e) {
+        res.status(400).json({error: e})
+    }
+}
+exports.showCompletedOrder = async (req , res) => {
+    try {
+        const orders = await Order.find({status:"completed"})
+        res.status(200).json(orders)
+    } catch (e) {
+        res.status(400).json({error: e})
+    }
+}
+
+exports.showUnderwayOrder = async (req , res) => {
+    try {
+        const orders = await Order.find({status:"underway"})
+        res.status(200).json(orders)
+    } catch (e) {
+        res.status(400).json({error: e})
+    }
+}
+
+
+
+exports.addOrder = async (req, res) => {
     const order = new Order({
         items: req.body.items ,
         client:req.body.client,
@@ -27,10 +68,11 @@ exports.AddOrder = async (req, res) => {
     }
 }
 
-exports.DeleteOrder = async (req, res) => {
+exports.deleteOrder = async (req, res) => {
+    const _id = req.params._id ;
 
     try {
-        await Order.remove({_id: req.params.orderId})
+        await Order.remove({_id: _id})
         res.status(200).json({'message':"The Order was removed"})
 
     } catch (e) {
@@ -38,14 +80,27 @@ exports.DeleteOrder = async (req, res) => {
     }
 }
 
-exports.UpdateOrder = async (req, res) => {
-
+exports.updateOrder = async (req, res) => {
+    const _id = req.params._id ;
     const newOrder = req.body;
     try {
-        const order = await Order.findById(req.params.orderId);
+        const order = await Order.findById(_id);
         Object.assign(order, newOrder)
         const updatedOrder = await order.save();
         res.status(200).send({data: updatedOrder})
+    } catch (e) {
+        console.log(e)
+        res.status(400).json({error: e})
+    }
+}
+
+exports.updateOrderStatus = async (req, res) => {
+
+    const newStatus  = req.body.status;
+    const _id  = req.params._id ;
+    try {
+        await Order.updateOne({_id:_id}  , {status:newStatus});
+        res.status(200)
     } catch (e) {
         console.log(e)
         res.status(400).json({error: e})
