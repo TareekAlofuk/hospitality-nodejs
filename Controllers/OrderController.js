@@ -12,6 +12,18 @@ exports.showOrders = async (req, res) => {
     }
 }
 
+exports.showClientOrders= async (req , res) => {
+    const userId = req.params.userId ;
+
+    try {
+        const orders = await Order.find({userId:userId})
+        res.status(200).json(orders)
+    } catch (e) {
+        res.status(400).json({error: e})
+    }
+
+}
+
 exports.showOrder= async (req, res) => {
     const _id = req.params._id ;
     try {

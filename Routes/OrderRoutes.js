@@ -8,6 +8,7 @@ router.patch('/UpdateStatus/:_id', OrderController.updateOrderStatus);
 router.delete('/Delete/:_id', OrderController.deleteOrder);
 router.get('/', OrderController.showOrders);
 router.get('/:_id', OrderController.showOrder);
+router.get('/showClientOrders/:userId', OrderController.showClientOrders);
 router.get('/Completed', OrderController.showCompletedOrder);
 router.get('/Underway', OrderController.showUnderwayOrder);
 router.get('/Waiting', OrderController.showWaitingOrder);
