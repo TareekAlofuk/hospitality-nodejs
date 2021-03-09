@@ -56,7 +56,9 @@ exports.addOrder = async (req, res) => {
     const order = new Order({
         items: req.body.items ,
         client:req.body.client,
-        isGust:req.body.isGust
+        isGust:req.body.isGust,
+        note:req.body.note,
+        userId:req.body.userId
     })
     try {
         const savedOrder = await order.save()
@@ -100,7 +102,7 @@ exports.updateOrderStatus = async (req, res) => {
     const _id  = req.params._id ;
     try {
         await Order.updateOne({_id:_id}  , {status:newStatus});
-        res.status(200)
+        res.status(200).json()
     } catch (e) {
         console.log(e)
         res.status(400).json({error: e})

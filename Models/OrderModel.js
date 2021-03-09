@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 const uniqueValidator = require('mongoose-unique-validator');
 
 const OrderSchema = new Schema({
+    userId:{type:String},
     items: [{
         itemName: {type: String, required: true},
         count: {type: Number, required: true}
@@ -17,8 +18,12 @@ const OrderSchema = new Schema({
     },
     note: {type: String},
     status:{
-        type:String ,
-        default:"waiting"
+        type:Number ,
+        default:0
+
+    //    0=Loading
+    //    1=underway
+    //    2=done
     },
     date: {
         type: Date,
