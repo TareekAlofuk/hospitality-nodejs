@@ -1,4 +1,5 @@
 const Room = require('./../Models/RoomModel')
+const {handleErrors} = require('HandleErrors')
 
 
 exports.showRooms = async (req, res) => {
@@ -8,9 +9,8 @@ exports.showRooms = async (req, res) => {
         res.status(200).json(Rooms)
 
     } catch (e) {
-        res.status(400).send({
-            error: e
-        });
+        res.status(400).json(handleErrors(e));
+
     }
 }
 
@@ -23,9 +23,8 @@ exports.AddRoom = async (req, res) => {
         const savedRoom = await room.save()
         res.status(200).json({data: savedRoom})
     } catch (e) {
-        res.status(400).send({
-            error: e
-        });
+        res.status(400).json(handleErrors(e));
+
     }
 }
 
@@ -36,9 +35,7 @@ exports.DeleteRoom = async (req, res) => {
         res.status(200).json("The room was removed")
 
     } catch (e) {
-        res.status(400).send({
-            error: e
-        });
+        res.status(400).json(handleErrors(e));
     }
 }
 
@@ -51,8 +48,6 @@ exports.UpdateRoom = async (req, res) => {
         const updatedRoom = await room.save();
         res.status(200).send({data: updatedRoom})
     } catch (e) {
-        res.status(400).send({
-            error: e
-        });
+        res.status(400).json(handleErrors(e));
     }
 }

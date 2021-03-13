@@ -1,5 +1,6 @@
 const Admin = require('./../Models/AdminModel')
 var flatten = require('flat')
+const {handleErrors} = require('HandleErrors')
 
 
 exports.showAdmins = async (req, res) => {
@@ -12,9 +13,7 @@ exports.showAdmins = async (req, res) => {
 
     } catch (e) {
         console.log(e)
-        res.status(400).send({
-            error: e
-        });
+        res.status(400).json(handleErrors(e));
     }
 }
 
@@ -36,7 +35,7 @@ exports.AddAdmin = async (req, res) => {
         const savedAdmin = await admin.save()
         res.status(200).json({data: savedAdmin})
     } catch (e) {
-        res.status(400).json(e);
+        res.status(400).json(handleErrors(e));
     }
 }
 
@@ -47,9 +46,8 @@ exports.DeleteAdmin = async (req, res) => {
         res.status(200).json("The Admin was removed")
 
     } catch (e) {
-        res.status(400).send({
-            error: e
-        });
+        res.status(400).json(handleErrors(e));
+
     }
 }
 
@@ -62,8 +60,6 @@ exports.UpdateAdmin = async (req, res) => {
         const updatedAdmin = await admin.save();
         res.status(200).send({data: updatedAdmin})
     } catch (e) {
-        res.status(400).send({
-            error: e
-        });
+        res.status(400).json(handleErrors(e));
     }
 }

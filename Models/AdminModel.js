@@ -5,17 +5,17 @@ const bcrypt = require('bcrypt')
 const AdminSchema = new Schema({
     name: {
         type: String,
-        required: true
+        required: [true , "this field is required "]
     },
     email: {
         type: String,
-        required: true,
-        unique: true
+        required: [true , "this field is required "],
+        unique: [true , "this field should be  uniq "]
 
     },
     password: {
         type: String,
-        required: true
+        required: [true , "this field is required "],
     },
     permitions: {
         operations: {type: Boolean,default:false},

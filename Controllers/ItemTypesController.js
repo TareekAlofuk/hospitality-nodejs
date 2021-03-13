@@ -1,4 +1,5 @@
 const ItemType = require('./../Models/ItemTypeModel')
+const {handleErrors} = require('HandleErrors')
 
 
 exports.showItemTypes = async (req, res) => {
@@ -8,7 +9,7 @@ exports.showItemTypes = async (req, res) => {
         res.json(items)
 
     } catch (e) {
-        res.json({error: e})
+        res.status(400).json(handleErrors(e));
     }
 }
 
@@ -21,9 +22,7 @@ exports.AddItemType = async (req, res) => {
         const savedItemType = await itemType.save()
         res.json({data: savedItemType})
     } catch (e) {
-        res.status(400).send({
-            error : e
-        });
+        res.status(400).json(handleErrors(e));
     }
 }
 
@@ -34,7 +33,7 @@ exports.DeleteItemType = async (req, res) => {
         res.json("The item type was removed")
 
     } catch (e) {
-        res.json({error: e})
+        res.status(400).json(handleErrors(e));
     }
 }
 
@@ -47,8 +46,6 @@ exports.UpdateItemType = async (req, res) => {
         const updatedItemType = await itemType.save();
         res.send({data: updatedItemType})
     } catch (e) {
-
-        console.log(e)
-        res.json({error: e})
+        res.status(400).json(handleErrors(e));
     }
 }

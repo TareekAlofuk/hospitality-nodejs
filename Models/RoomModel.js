@@ -5,7 +5,7 @@ const uniqueValidator = require('mongoose-unique-validator');
 const RoomSchema = new Schema({
     name: {
         type: String,
-        required: true,
+        required: [true , "this field is required "],
         unique: true
     }
 })

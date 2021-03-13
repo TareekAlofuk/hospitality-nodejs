@@ -5,20 +5,20 @@ const uniqueValidator = require('mongoose-unique-validator');
 const ItemSchema = new Schema({
     itemName: {
         type: String,
-        required: true,
+        required: [true , "this field is required "],
         unique: true
     },
     type: {
         type: String,
-        required: true
+        required: [true , "this field is required "],
     },
     image: {
         type: String,
-        required: true
+        required: [true , "this field is required "],
     },
     isActive: {
         type: Boolean,
-        default: true
+        required: [true , "this field is required "],
     }
 })
 ItemSchema.plugin(uniqueValidator);

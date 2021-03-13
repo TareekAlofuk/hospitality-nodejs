@@ -5,19 +5,31 @@ const uniqueValidator = require('mongoose-unique-validator');
 const OrderSchema = new Schema({
     userId: {
         type: String,
-        required: true
+        required: [true, "this field is required "],
     },
     items: [{
-        itemName: {type: String, required: true},
-        count: {type: Number, required: true}
+        itemName: {
+            type: String,
+            required: [true, "this field is required "]
+        },
+        count: {
+            type: Number,
+            required: [true, "this field is required "]
+        }
     }],
     client: {
-        clientName: {type: String, required: true},
-        roomName: {type: String, required: true}
+        clientName: {
+            type: String,
+            required: [true, "this field is required "]
+        },
+        roomName: {
+            type: String,
+            required: [true, "this field is required "]
+        }
     },
     isGust: {
         type: Boolean,
-        required: true
+        required: [true, "this field is required "]
     },
     note: {type: String},
     status: {
