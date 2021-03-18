@@ -10,14 +10,14 @@ const AdminSchema = new Schema({
     email: {
         type: String,
         required: [true , "this field is required "],
-        unique: [true , "this field should be  uniq "]
+        unique: true
 
     },
     password: {
         type: String,
         required: [true , "this field is required "],
     },
-    permitions: {
+    permissions: {
         operations: {type: Boolean,default:false},
         reports: {type: Boolean ,default:false},
         inventory: {type: Boolean ,default:false},
@@ -30,4 +30,19 @@ AdminSchema.pre('save' , async function (next){
     this.password  = await  bcrypt.hash(this.password , salt);
     next();
 })
+
+
+// static method to login user
+AdminSchema.statics.login = async function(email , password) {
+    const admin = await  this.findOne({email});
+    if (admin){
+        const auth = await bcrypt.compare(password , admin.password)
+        if (auth){
+            console.log(auth)
+            return admin ;
+        }
+    throw Error('incorrect password')
+    }
+    throw Error('incorrect email')
+}
 module.exports = mongoose.model('Admin', AdminSchema)

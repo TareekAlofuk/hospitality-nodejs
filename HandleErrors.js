@@ -1,8 +1,8 @@
-export const handleErrors = (err) => {
+  exports.handleErrors = (err) => {
     console.log(err.message, err.code);
     let errors = { email: '', password: '' };
 
-    // duplicate email error
+    // duplicate  error
     if (err.code === 11000) {
         errors.email = 'that email is already registered';
         return errors;
@@ -20,3 +20,4 @@ export const handleErrors = (err) => {
 
     return errors;
 }
+

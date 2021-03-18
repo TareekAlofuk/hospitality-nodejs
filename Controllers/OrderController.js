@@ -1,10 +1,16 @@
 const Order = require('./../Models/OrderModel')
-const {handleErrors} = require('HandleErrors')
+const {handleErrors} = require('./../HandleErrors')
+const {Permissions} = require('./../middleware/Authorization')
 
 
 
 
 exports.showOrders = async (req, res) => {
+    const authentic = await Permissions(req  , ['operations'])
+    if (!(authentic)) {
+        res.status(400).json({e: "there is an authentication error"})
+        return
+    }
     try {
         const orders = await Order.find()
         res.status(200).json(orders)
@@ -15,6 +21,8 @@ exports.showOrders = async (req, res) => {
 
 exports.showClientOrders= async (req , res) => {
     const userId = req.params.userId ;
+    console.log(req.headers.authorization)
+
 
     try {
         const orders = await Order.find({userId:userId})
@@ -26,6 +34,12 @@ exports.showClientOrders= async (req , res) => {
 }
 
 exports.showOrder= async (req, res) => {
+    const authentic = await Permissions(req  , ['operations'])
+    if (!(authentic)) {
+        res.status(400).json({e: "there is an authentication error"})
+        return
+    }
+
     const _id = req.params._id ;
     try {
         const order = await Order.findById(_id)
@@ -38,6 +52,12 @@ exports.showOrder= async (req, res) => {
 
 
 exports.showWaitingOrder = async (req , res) => {
+    const authentic = await Permissions(req  , ['operations '])
+    if (!(authentic)) {
+        res.status(400).json({e: "there is an authentication error"})
+        return
+    }
+
     try {
         const orders = await Order.find({status:"waiting"})
         res.status(200).json(orders)
@@ -46,6 +66,11 @@ exports.showWaitingOrder = async (req , res) => {
     }
 }
 exports.showCompletedOrder = async (req , res) => {
+    const authentic = await Permissions(req  , ['operations , inventory'])
+    if (!(authentic)) {
+        res.status(400).json({e: "there is an authentication error"})
+        return
+    }
     try {
         const orders = await Order.find({status:"completed"})
         res.status(200).json(orders)
@@ -55,6 +80,11 @@ exports.showCompletedOrder = async (req , res) => {
 }
 
 exports.showUnderwayOrder = async (req , res) => {
+    const authentic = await Permissions(req  , ['operations'])
+    if (!(authentic)) {
+        res.status(400).json({e: "there is an authentication error"})
+        return
+    }
     try {
         const orders = await Order.find({status:"underway"})
         res.status(200).json(orders)
@@ -83,7 +113,6 @@ exports.addOrder = async (req, res) => {
 
 exports.deleteOrder = async (req, res) => {
     const _id = req.params._id ;
-
     try {
         await Order.remove({_id: _id})
         res.status(200).json({'message':"The Order was removed"})
@@ -107,7 +136,11 @@ exports.updateOrder = async (req, res) => {
 }
 
 exports.updateOrderStatus = async (req, res) => {
-
+    const authentic = await Permissions(req  , ['operations'])
+    if (!(authentic)) {
+        res.status(400).json({e: "there is an authentication error"})
+        return
+    }
     const newStatus  = req.body.status;
     const _id  = req.params._id ;
     try {

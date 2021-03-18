@@ -1,5 +1,5 @@
 const Room = require('./../Models/RoomModel')
-const {handleErrors} = require('HandleErrors')
+const {handleErrors} = require('./../HandleErrors')
 
 
 exports.showRooms = async (req, res) => {

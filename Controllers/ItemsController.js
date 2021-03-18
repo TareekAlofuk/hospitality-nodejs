@@ -3,9 +3,17 @@ const fs = require('fs');
 const path = require('path')
 const formidable = require('formidable');
 const { v4: uuidv4 } = require('uuid');
-const {handleErrors} = require('HandleErrors')
+const {handleErrors} = require('./../HandleErrors')
+const {permissions} = require('./../middleware/Authorization')
+
 
 exports.showItems = async (req, res) => {
+    const authentic = await permissions(req  , ['inventory'])
+    if (!(authentic)) {
+        res.status(400).json({e: "there is an authentication error"})
+        return
+    }
+
     try {
         const items = await Item.find()
         res.json(items)
@@ -16,6 +24,7 @@ exports.showItems = async (req, res) => {
 
 
 exports.showActiveItems = async (req, res) => {
+
     try {
         const ActiveItems = await Item.find({isActive: true})
         res.json(ActiveItems)
@@ -25,6 +34,12 @@ exports.showActiveItems = async (req, res) => {
 }
 
 exports.showItem = async (req, res) => {
+    const authentic = await permissions(req  , ['operations'])
+    if (!(authentic)) {
+        res.status(400).json({e: "there is an authentication error"})
+        return
+    }
+
     try {
         const item = await Item.findById(req.params.itemId);
         res.json(item)
@@ -36,7 +51,11 @@ exports.showItem = async (req, res) => {
 
 
 exports.AddItem = async (req, res) => {
-    console.log(req.body)
+    const authentic = await permissions(req  , ['inventory'])
+    if (!(authentic)) {
+        res.status(400).json({e: "there is an authentication error"})
+        return
+    }
     const item = new Item({
         itemName: req.body.itemName,
         type: req.body.type,
@@ -56,6 +75,11 @@ exports.AddItem = async (req, res) => {
 exports.UploadImage = async (req, res) => {
 
 
+    const authentic = await permissions(req  , ['inventory'])
+    if (!(authentic)) {
+        res.status(400).json({e: "there is an authentication error"})
+        return
+    }
 
     const form = new formidable.IncomingForm();
 
@@ -93,6 +117,12 @@ exports.UploadImage = async (req, res) => {
 
 
 exports.UpdateItem = async (req, res) => {
+    const authentic = await permissions(req  , ['inventory'])
+    if (!(authentic)) {
+        res.status(400).json({e: "there is an authentication error"})
+        return
+    }
+
     const newItem = req.body;
     try {
         const item = await Item.findById(req.params.itemId);
@@ -106,6 +136,11 @@ exports.UpdateItem = async (req, res) => {
 
 
 exports.DeleteItem = async (req, res) => {
+    const authentic = await permissions(req  , ['inventory'])
+    if (!(authentic)) {
+        res.status(400).json({e: "there is an authentication error"})
+        return
+    }
 
     try {
         await Item.remove({_id: req.params.itemId})

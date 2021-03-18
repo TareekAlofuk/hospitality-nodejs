@@ -1,9 +1,14 @@
 const ItemType = require('./../Models/ItemTypeModel')
-const {handleErrors} = require('HandleErrors')
+const {handleErrors} = require('./../HandleErrors')
+const {Permissions} = require('./../middleware/Authorization')
 
 
 exports.showItemTypes = async (req, res) => {
-
+    const authentic = await Permissions(req  , ['inventory'])
+    if (!(authentic)) {
+        res.status(400).json({e: "there is an authentication error"})
+        return
+    }
     try {
         const items = await ItemType.find()
         res.json(items)
@@ -15,6 +20,12 @@ exports.showItemTypes = async (req, res) => {
 
 
 exports.AddItemType = async (req, res) => {
+    const authentic = await Permissions(req  , ['inventory'])
+    if (!(authentic)) {
+        res.status(400).json({e: "there is an authentication error"})
+        return
+    }
+
     const itemType = new ItemType({
         name: req.body.name
     })
@@ -27,6 +38,11 @@ exports.AddItemType = async (req, res) => {
 }
 
 exports.DeleteItemType = async (req, res) => {
+    const authentic = await Permissions(req  , ['inventory'])
+    if (!(authentic)) {
+        res.status(400).json({e: "there is an authentication error"})
+        return
+    }
 
     try {
         await ItemType.remove({_id: req.params.itemTypeId})
@@ -38,6 +54,11 @@ exports.DeleteItemType = async (req, res) => {
 }
 
 exports.UpdateItemType = async (req, res) => {
+    const authentic = await Permissions(req  , ['inventory'])
+    if (!(authentic)) {
+        res.status(400).json({e: "there is an authentication error"})
+        return
+    }
 
     const newItemType = req.body;
     try {
