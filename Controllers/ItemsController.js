@@ -18,7 +18,7 @@ exports.showItems = async (req, res) => {
         const items = await Item.find()
         res.json(items)
     } catch (e) {
-        res.status(400).json(handleErrors(e));
+        res.status(400).json(e);
     }
 }
 
@@ -29,7 +29,7 @@ exports.showActiveItems = async (req, res) => {
         const ActiveItems = await Item.find({isActive: true})
         res.json(ActiveItems)
     } catch (e) {
-        res.status(400).json(handleErrors(e));
+        res.status(400).json(e);
     }
 }
 
@@ -45,7 +45,7 @@ exports.showItem = async (req, res) => {
         res.json(item)
 
     } catch (e) {
-        res.status(400).json(handleErrors(e));
+        res.status(400).json(e);
     }
 }
 
@@ -67,7 +67,7 @@ exports.AddItem = async (req, res) => {
         res.status(200).json({data: savedItem})
     } catch (e) {
         console.log(e)
-        res.status(400).json(handleErrors(e));
+        res.status(400).json(e);
     }
 
 }
@@ -86,7 +86,7 @@ exports.UploadImage = async (req, res) => {
     form.parse(req, function (e, fields, files) {
         console.log(files);
         if(e){
-            res.status(400).json(handleErrors(e));
+            res.status(400).json(e);
             return;
         }
 
@@ -99,15 +99,15 @@ exports.UploadImage = async (req, res) => {
 
             const rawData = fs.readFileSync(files.image.path)
             fs.writeFile(imagePath, rawData, () => {
-                if (err) {
-                    res.status(400).json(handleErrors(err));
+                if (e) {
+                    res.status(400).json(e);
                 }else{
                     res.status(200).json({url: imageName})
                 }
             })
 
         }catch(e){
-            res.status(400).send(e);
+            res.status(400).json(e);
         }
 
     })
@@ -147,7 +147,7 @@ exports.DeleteItem = async (req, res) => {
         res.json("The item was removed")
 
     } catch (e) {
-        res.status(400).json(handleErrors(e));
+        res.status(400).json(e);
     }
 }
 

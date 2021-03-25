@@ -8,19 +8,13 @@ const AdminRoutes = require('./Routes/AdminRoutes')
 const OrderRoutes = require('./Routes/OrderRoutes')
 const cors = require('cors');
 const app = express();
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
 
 
 app.use(cors());
 app.use(express.json())
 
 
-app.use('/api/Admin', AdminRoutes)
-app.use('/api/Item', ItemRoutes)
-app.use('/api/ItemType', ItemTypeRoutes)
-app.use('/api/Room', RoomRoutes)
-app.use('/api/Order', OrderRoutes)
+
 
 app.use(express.static('StaticFileServer'))
 
@@ -40,10 +34,29 @@ db.once('open', () => {
 });
 
 
-app.listen(3100, () => {
+const server = app.listen(3100, () => {
     console.log("Server started:3100")
-})
+});
+
+const io = require('socket.io')(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
+
+io.on('connection', function () {
+    console.log('A user connected');
+});
+
+app.use(function (req, res, next) {
+    req.io = io;
+    next();
+});
 
 
-
-
+app.use('/api/Admin', AdminRoutes)
+app.use('/api/Item', ItemRoutes)
+app.use('/api/ItemType', ItemTypeRoutes)
+app.use('/api/Room', RoomRoutes)
+app.use('/api/Order', OrderRoutes)

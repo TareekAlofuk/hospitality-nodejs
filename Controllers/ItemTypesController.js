@@ -1,10 +1,10 @@
 const ItemType = require('./../Models/ItemTypeModel')
 const {handleErrors} = require('./../HandleErrors')
-const {Permissions} = require('./../middleware/Authorization')
+const {permissions} = require('./../middleware/Authorization')
 
 
 exports.showItemTypes = async (req, res) => {
-    const authentic = await Permissions(req  , ['inventory'])
+    const authentic = await permissions(req  , ['inventory'])
     if (!(authentic)) {
         res.status(400).json({e: "there is an authentication error"})
         return
@@ -14,13 +14,13 @@ exports.showItemTypes = async (req, res) => {
         res.json(items)
 
     } catch (e) {
-        res.status(400).json(handleErrors(e));
+        res.status(400).json(e);
     }
 }
 
 
 exports.AddItemType = async (req, res) => {
-    const authentic = await Permissions(req  , ['inventory'])
+    const authentic = await permissions(req  , ['inventory'])
     if (!(authentic)) {
         res.status(400).json({e: "there is an authentication error"})
         return
@@ -33,12 +33,12 @@ exports.AddItemType = async (req, res) => {
         const savedItemType = await itemType.save()
         res.json({data: savedItemType})
     } catch (e) {
-        res.status(400).json(handleErrors(e));
+        res.status(400).json(e);
     }
 }
 
 exports.DeleteItemType = async (req, res) => {
-    const authentic = await Permissions(req  , ['inventory'])
+    const authentic = await permissions(req  , ['inventory'])
     if (!(authentic)) {
         res.status(400).json({e: "there is an authentication error"})
         return
@@ -49,12 +49,12 @@ exports.DeleteItemType = async (req, res) => {
         res.json("The item type was removed")
 
     } catch (e) {
-        res.status(400).json(handleErrors(e));
+        res.status(400).json(e);
     }
 }
 
 exports.UpdateItemType = async (req, res) => {
-    const authentic = await Permissions(req  , ['inventory'])
+    const authentic = await permissions(req  , ['inventory'])
     if (!(authentic)) {
         res.status(400).json({e: "there is an authentication error"})
         return
@@ -67,6 +67,6 @@ exports.UpdateItemType = async (req, res) => {
         const updatedItemType = await itemType.save();
         res.send({data: updatedItemType})
     } catch (e) {
-        res.status(400).json(handleErrors(e));
+        res.status(400).json(e);
     }
 }
