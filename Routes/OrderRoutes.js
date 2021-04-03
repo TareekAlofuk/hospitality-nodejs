@@ -12,6 +12,7 @@ router.get('/showClientOrders/:userId', OrderController.showClientOrders);
 router.get('/Completed', OrderController.showCompletedOrder);
 router.get('/Underway', OrderController.showUnderwayOrder);
 router.get('/Waiting', OrderController.showWaitingOrder);
+router.get('/AllClientsReport', OrderController.allClientsReport);
 
 
 module.exports = router

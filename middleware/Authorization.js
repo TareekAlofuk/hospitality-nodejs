@@ -46,12 +46,7 @@ const authorization =   async (req) => {
 
 }
 
-exports.isSuperAdmin = async (req ) => {
-    let permissions ;
-    const authData =  await authorization(req)
-    permissions = authData.permissions
-    return permissions.filter(permission => permission === "superAdmin").length !== 0;
-}
+
 exports.permissions = async (req  , permissions) => {
     let requestPermissions ;
     const authData =  await authorization(req )
@@ -59,30 +54,20 @@ exports.permissions = async (req  , permissions) => {
 
     return requestPermissions.some(p => permissions.includes(p));
 
-    // for (let i = 0; i < requestPermissions.length; i++) {
-    //     for (let j = 0; j < permissions.length; j++) {
-    //        if(permissions[j] === requestPermissions[i]){
-    //            return true
-    //        }
-    //
-    //     }
-    //
-    // }
-    //  return false
 }
 
-exports.isInventory = async (req , model) => {
-    let permissions ;
-    const authData =  await authorization(req ,model)
-    permissions = authData.permissions
-    return permissions.filter(permission => permission === "inventory").length !== 0;
-}
-exports.isReports = async (req , model) => {
-    let permissions ;
-    const authData =  await authorization(req ,model)
-    permissions = authData.permissions
-    return permissions.filter(permission => permission === "reports").length !== 0;
-}
+// exports.isInventory = async (req , model) => {
+//     let permissions ;
+//     const authData =  await authorization(req ,model)
+//     permissions = authData.permissions
+//     return permissions.filter(permission => permission === "inventory").length !== 0;
+// }
+// exports.isReports = async (req , model) => {
+//     let permissions ;
+//     const authData =  await authorization(req ,model)
+//     permissions = authData.permissions
+//     return permissions.filter(permission => permission === "reports").length !== 0;
+// }
 
 exports.notAuthenticated= async (req , model) => {
     let permissions ;

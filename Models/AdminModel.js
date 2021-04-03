@@ -34,9 +34,6 @@ AdminSchema.pre('save' , async function (next){
 
 // static method to login user
 AdminSchema.statics.login = async function(email , password) {
-    // const salt = await bcrypt.genSalt();
-    //  const test  = await bcrypt.hash(password , salt)
-    //  console.log(test)
     const admin = await  this.findOne({email});
     if (admin){
         const auth = await bcrypt.compare(password , admin.password)

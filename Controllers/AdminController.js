@@ -32,6 +32,7 @@ exports.showAdmins = async (req, res) => {
 }
 
 
+
 exports.AddAdmin = async (req, res) => {
 
     const authentic = await permissions(req , ['superAdmin'])
@@ -116,7 +117,6 @@ exports.login = async (req, res) => {
     try {
         const admin = await Admin.login(email, password);
         const token = createToken(admin);
-        console.log(admin)
         res.status(200).json({data:admin, token: token})
     } catch (e) {
         console.log(e)
