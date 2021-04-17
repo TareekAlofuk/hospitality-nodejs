@@ -41,8 +41,13 @@ const OrderSchema = new Schema({
         //    2=done
     },
     date: {
-        type: Date,
-        default: Date.now
+        type:Date,
+        default:Date.new
+    },
+    time:{
+        type:String,
+        // new Date().getHours() + ":"+new Date().getMinutes()+":"+new Date().getSeconds() + "  " + new Date().getHours() > 12 ?"PM" :"AM"
+        default: new Date().getHours() > 12 ? new Date().getHours() - 12 + ":"+new Date().getMinutes()+"PM":new Date().getHours() + ":"+new Date().getMinutes()+"AM"
     }
 })
 OrderSchema.plugin(uniqueValidator);

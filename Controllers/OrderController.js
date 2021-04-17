@@ -10,20 +10,17 @@ exports.showOrders = async (req, res) => {
         return
     }
     try {
-        const orders = await Order.find()
+        const orders = await Order.find().limit(40);
         res.status(200).json(orders)
     } catch (e) {
-        res.status(400).json(handleErrors(e));
+        res.status(400).json(e);
     }
 }
 
 exports.showClientOrders = async (req, res) => {
     const userId = req.params.userId;
-    console.log(req.headers.authorization)
-
-
     try {
-        const orders = await Order.find({userId: userId})
+        const orders = await Order.find({userId: userId}).limit(20)
         res.status(200).json(orders)
     } catch (e) {
         res.status(400).json(e);
@@ -105,13 +102,11 @@ exports.addOrder = async (req, res) => {
         client: req.body.client,
         isGust: req.body.isGust,
         note: req.body.note,
-        userId: req.body.userId
+        userId: req.body.userId,
     })
     try {
         const savedOrder = await order.save()
         res.status(200).json({data: savedOrder});
-        console.log('new order');
-
         req.io.sockets.emit(EventNames.NEW_ORDER, savedOrder);
     } catch (e) {
         res.status(400).json(e);
@@ -166,9 +161,7 @@ exports.allClientsReport = async (req, res) => {
         return
     }
     try {
-        // const ISODateNow =(Date.now()).toISOString()
-        // const ISODateHalfYear = ((Date.now()).setMonth(6)).toISOString()
-        //
+
         let clientsDetails = await Order.aggregate([
             // {
             //     $match : { "date": { $gte: ISODateNow, $lt: ISODateHalfYear } }
