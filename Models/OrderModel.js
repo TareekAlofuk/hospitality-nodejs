@@ -46,7 +46,7 @@ const OrderSchema = new Schema({
     },
     time:{
         type:String,
-        default: new Date().getHours() > 12 ? new Date().getHours() - 12 + ":"+new Date().getMinutes()+"PM":new Date().getHours() + ":"+new Date().getMinutes()+"AM"
+        required:true
     }
 })
 OrderSchema.plugin(uniqueValidator);

@@ -9,6 +9,7 @@ exports.showOrders = async (req, res) => {
         res.status(400).json({e: "there is an authentication error"})
         return
     }
+
     try {
         const orders = await Order.find().limit(40);
         res.status(200).json(orders)
@@ -103,6 +104,7 @@ exports.addOrder = async (req, res) => {
         isGust: req.body.isGust,
         note: req.body.note,
         userId: req.body.userId,
+        time:new Date().getHours() > 12 ? new Date().getHours() - 12 + ":"+new Date().getMinutes()+"PM":new Date().getHours() + ":"+new Date().getMinutes()+"AM"
     })
     try {
         const savedOrder = await order.save()
