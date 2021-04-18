@@ -160,16 +160,22 @@ exports.allClientsReport = async (req, res) => {
         res.status(400).json({e: "there is an authentication error"})
         return
     }
+
     try {
 
         let clientsDetails = await Order.aggregate([
-            // {
-            //     $match : { "date": { $gte: ISODateNow, $lt: ISODateHalfYear } }
-            // },
+            {
+                $match : { status:2}
+            },
+            {
+                $match :  {date : {$gt: new Date(new Date().setDate(new Date().getDate()-30))
+                        // , $lt :  new Date(new Date().setDate(new Date().getDate()-10))
+                }}
+            },
             {
                 $group: {
                     _id: "$client.clientName",
-                    orders: {$push: "$items.itemName"},
+                    orders: {$push: "$items"},
                     ordersCount: {$sum: 1},
                 },
 
@@ -177,14 +183,24 @@ exports.allClientsReport = async (req, res) => {
         ]).then((clients) => {
             return  clients.map((client) => {
                 let itemsCount = 0 ;
-                client.orders.forEach(items => {
-                    itemsCount =  items.length + itemsCount
-                });
+                if(client.orders !== undefined){
+                 client.orders.forEach(items => {
+
+                     let itemCount = 0 ;
+
+                     items.forEach(item => {
+                         itemCount = item.count + itemCount
+                     })
+                    itemsCount =  itemCount  + itemsCount
+                })
                 client.itemsCount = itemsCount ;
                 return client
+                }
+                else{
+                    return []
+                }
             })
         })
-
 
         res.json(clientsDetails)
     } catch (e) {

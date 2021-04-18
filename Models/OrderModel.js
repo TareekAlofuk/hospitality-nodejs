@@ -42,11 +42,10 @@ const OrderSchema = new Schema({
     },
     date: {
         type:Date,
-        default:Date.new
+        default: Date.now
     },
     time:{
         type:String,
-        // new Date().getHours() + ":"+new Date().getMinutes()+":"+new Date().getSeconds() + "  " + new Date().getHours() > 12 ?"PM" :"AM"
         default: new Date().getHours() > 12 ? new Date().getHours() - 12 + ":"+new Date().getMinutes()+"PM":new Date().getHours() + ":"+new Date().getMinutes()+"AM"
     }
 })
