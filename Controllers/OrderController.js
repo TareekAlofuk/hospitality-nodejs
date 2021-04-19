@@ -11,7 +11,7 @@ exports.showOrders = async (req, res) => {
     }
 
     try {
-        const orders = await Order.find().limit(40);
+        const orders = await Order.find().sort({_id:-1}).limit(40);
         res.status(200).json(orders)
     } catch (e) {
         res.status(400).json(e);
@@ -21,7 +21,7 @@ exports.showOrders = async (req, res) => {
 exports.showClientOrders = async (req, res) => {
     const userId = req.params.userId;
     try {
-        const orders = await Order.find({userId: userId}).limit(20)
+        const orders = await Order.find({userId: userId}).sort({_id:-1}).limit(20)
         res.status(200).json(orders)
     } catch (e) {
         res.status(400).json(e);
@@ -54,7 +54,7 @@ exports.showWaitingOrder = async (req, res) => {
     }
 
     try {
-        const orders = await Order.find({status: 0})
+        const orders = await Order.find({status: 0}).sort({_id:-1})
         res.status(200).json(orders)
     } catch (e) {
         res.status(400).json(e);
@@ -67,7 +67,7 @@ exports.showCompletedOrder = async (req, res) => {
         return
     }
     try {
-        const orders = await Order.find({status: 2})
+        const orders = await Order.find({status: 2}).sort({_id:-1})
         res.status(200).json(orders)
     } catch (e) {
         res.status(400).json(e);
