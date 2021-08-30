@@ -45,7 +45,6 @@ exports.showOrder = async (req, res) => {
     }
 }
 
-
 exports.showWaitingOrder = async (req, res) => {
     const authentic = await permissions(req, ['operations'])
     if (!(authentic)) {
@@ -60,6 +59,7 @@ exports.showWaitingOrder = async (req, res) => {
         res.status(400).json(e);
     }
 }
+
 exports.showCompletedOrder = async (req, res) => {
     const authentic = await permissions(req, ['operations , inventory'])
     if (!(authentic)) {
@@ -163,6 +163,8 @@ exports.allClientsReport = async (req, res) => {
         return
     }
 
+
+
     try {
 
         let clientsDetails = await Order.aggregate([
@@ -171,7 +173,7 @@ exports.allClientsReport = async (req, res) => {
             },
             {
                 $match :  {date : {$gt: new Date(new Date().setDate(new Date().getDate()-30))
-                        // , $lt :  new Date(new Date().setDate(new Date().getDate()-10))
+
                 }}
             },
             {
@@ -193,7 +195,7 @@ exports.allClientsReport = async (req, res) => {
                      items.forEach(item => {
                          itemCount = item.count + itemCount
                      })
-                    itemsCount =  itemCount  + itemsCount
+                     itemsCount =  itemCount  + itemsCount
                 })
                 client.itemsCount = itemsCount ;
                 return client
@@ -204,7 +206,7 @@ exports.allClientsReport = async (req, res) => {
             })
         })
 
-        res.json(clientsDetails)
+        res.status(200).json(clientsDetails)
     } catch (e) {
         console.log(e)
         res.status(400).json(e);
@@ -212,4 +214,68 @@ exports.allClientsReport = async (req, res) => {
 
 }
 
+exports.reportByMonth = async (req, res) => {
+    const numberOfMonthFromNow = parseInt(req.params.numberOfMonthFromNow)  ;
+    if (numberOfMonthFromNow) {
+        res.status(400).json({e:'cant get month greater than this month'})
+        return 0
+    }
+    let date = new Date();
+    let beginningOfTheMonth = new Date(date.getFullYear(),date.getMonth() + numberOfMonthFromNow , 1);
+    let endOfTheMonth = new Date(date.getFullYear(),date.getMonth()+1+ numberOfMonthFromNow  , 0 , 23 , 59 , 59);
+
+
+    // console.log(beginningOfTheMonth)
+    try{
+        let orders =  await Order.aggregate([
+            {
+                $match : { status:2}
+            },
+            {
+                $match :  {date : {$gt: beginningOfTheMonth , $lte: endOfTheMonth}}
+            },
+            {
+                $group: {
+                    _id: "1",
+                    orderItems: {$push: "$items"},
+                    ordersCount: {$sum: 1},
+                },
+            }
+        ])
+
+
+
+        if (!orders.length) {
+            res.status(200).json(orders)
+            return 0
+        }
+         let items = [] ;
+        let itemsInAssociativeArray= [] ;
+        let itemsNameWithCount = []
+        for (const order of orders[0].orderItems) {
+            for (const item of order){
+                items.push(item)
+            }
+        }
+
+        for (let i = 0 ; i<items.length ; i++) {
+
+                if (itemsInAssociativeArray[items[i].itemName] !== undefined ){
+                    itemsInAssociativeArray[items[i].itemName] = itemsInAssociativeArray[items[i].itemName] + items[i].count;
+                }else {
+                    itemsInAssociativeArray[items[i].itemName] = items[i].count;
+                }
+        }
+
+        for (let key in itemsInAssociativeArray) {
+            itemsNameWithCount.push({itemName:key , itemCount:itemsInAssociativeArray[key]})
+        }
+
+        res.status(200).json(itemsNameWithCount)
+
+    } catch(e) {
+         console.log(e)
+         res.status(400).json(e);
+     }
+}
 

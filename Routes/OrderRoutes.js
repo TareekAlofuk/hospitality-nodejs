@@ -13,6 +13,7 @@ router.get('/Completed', OrderController.showCompletedOrder);
 router.get('/Underway', OrderController.showUnderwayOrder);
 router.get('/Waiting', OrderController.showWaitingOrder);
 router.get('/AllClientsReport', OrderController.allClientsReport);
+router.get('/ReportByMonth/:numberOfMonthFromNow', OrderController.reportByMonth);
 
 
 module.exports = router
