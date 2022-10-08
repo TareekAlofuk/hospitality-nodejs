@@ -52,14 +52,16 @@ exports.showItem = async (req, res) => {
 
 exports.AddItem = async (req, res) => {
     const authentic = await permissions(req  , ['inventory'])
+    const serverStaticIp = "192.168.20.10:3100";
     if (!(authentic)) {
         res.status(400).json({e: "there is an authentication error"})
         return
     }
+    const item_iamge = "http://" +serverStaticIp+ "/image/" + req.body.image ; 
     const item = new Item({
         itemName: req.body.itemName,
         type: req.body.type,
-        image: 'req.body.image',
+        image: item_iamge,
         isActive: req.body.isActive
     })
     try {
