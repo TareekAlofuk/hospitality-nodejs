@@ -1,4 +1,4 @@
-const {permissions , notAuthenticated} = require('./../middleware/Authorization')
+const { permissions, notAuthenticated } = require('./../middleware/Authorization')
 const Admin = require('./../Models/AdminModel')
 const jwt = require('jsonwebtoken');
 
@@ -13,12 +13,11 @@ const createToken = (admin) => {
 
 
 exports.showAdmins = async (req, res) => {
-    const authentic = await permissions(req , ['superAdmin'])
+    const authentic = await permissions(req, ['superAdmin'])
     if (!(authentic)) {
-        res.status(400).json({e: "there is an authentication error"})
+        res.status(400).json({ e: "there is an authentication error" })
         return
     }
-
 
     try {
         let admins = await Admin.find()
@@ -31,13 +30,45 @@ exports.showAdmins = async (req, res) => {
 
 }
 
+exports.AddDefaultAdmin = async (req, res) => {
+
+    try {
+        let admins = await Admin.find()
+        const adminCount = admins.length;
+        if (adminCount != 0) { res.status(200).json({ data: "Admin exist" }); return; };
+        const admin = new Admin({
+            name: "Administrator",
+            email: "Administrator@test.com",
+            password: "12345",
+            permissions: {
+                operations: true,
+                reports: true,
+                inventory: true,
+                superAdmin: true,
+            }
+        })
+
+        try {
+            const savedAdmin = await admin.save()
+            res.status(200).json({ data: savedAdmin })
+        } catch (e) {
+            res.status(400).send(e);
+        }
+
+    } catch (e) {
+        console.log(e)
+        res.status(400).json(e);
+    }
+
+}
+
 
 
 exports.AddAdmin = async (req, res) => {
 
-    const authentic = await permissions(req , ['superAdmin'])
+    const authentic = await permissions(req, ['superAdmin'])
     if (!(authentic)) {
-        res.status(400).json({e: "there is an authentication error"})
+        res.status(400).json({ e: "there is an authentication error" })
         return
     }
 
@@ -55,21 +86,21 @@ exports.AddAdmin = async (req, res) => {
     })
     try {
         const savedAdmin = await admin.save()
-        res.status(200).json({data: savedAdmin})
+        res.status(200).json({ data: savedAdmin })
     } catch (e) {
         res.status(400).send(e);
     }
 }
 
 exports.DeleteAdmin = async (req, res) => {
-    const authentic = await permissions(req , ['superAdmin'])
+    const authentic = await permissions(req, ['superAdmin'])
     if (!(authentic)) {
-        res.status(400).json({e: "there is an authentication error"})
+        res.status(400).json({ e: "there is an authentication error" })
         return
     }
 
     try {
-        await Admin.remove({_id: req.params.adminId})
+        await Admin.remove({ _id: req.params.adminId })
         res.status(200).json("The Admin was removed")
     } catch (e) {
         res.status(400).json(e);
@@ -78,9 +109,9 @@ exports.DeleteAdmin = async (req, res) => {
 }
 
 exports.UpdateAdmin = async (req, res) => {
-    const authentic = await permissions(req , ['superAdmin'])
+    const authentic = await permissions(req, ['superAdmin'])
     if (!(authentic)) {
-        res.status(400).json({e: "there is an authentication error"})
+        res.status(400).json({ e: "there is an authentication error" })
         return
     }
 
@@ -99,7 +130,7 @@ exports.UpdateAdmin = async (req, res) => {
         const admin = await Admin.findById(req.params.adminId);
         Object.assign(admin, newAdmin)
         const updatedAdmin = await admin.save();
-        res.status(200).send({data: updatedAdmin})
+        res.status(200).send({ data: updatedAdmin })
     } catch (e) {
         res.status(400).json(e);
     }
@@ -109,15 +140,15 @@ exports.login = async (req, res) => {
     const notAuthentic = await notAuthenticated(req)
 
     if (!(notAuthentic)) {
-        res.status(400).json({e: "there is an authentication error"})
+        res.status(400).json({ e: "there is an authentication error" })
         return
     }
 
-    const {email, password} = req.body;
+    const { email, password } = req.body;
     try {
         const admin = await Admin.login(email, password);
         const token = createToken(admin);
-        res.status(200).json({data:admin, token: token})
+        res.status(200).json({ data: admin, token: token })
     } catch (e) {
         console.log(e)
         res.status(400).json(e.message);
