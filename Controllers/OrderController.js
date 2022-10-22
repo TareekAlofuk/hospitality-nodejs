@@ -4,11 +4,11 @@ const {permissions} = require('./../middleware/Authorization')
 
 
 exports.showOrders = async (req, res) => {
-    const authentic = await permissions(req, ['operations'])
-    if (!(authentic)) {
-        res.status(400).json({e: "there is an authentication error"})
-        return
-    }
+    // const authentic = await permissions(req, ['operations'])
+    // if (!(authentic)) {
+    //     res.status(400).json({e: "there is an authentication error"})
+    //     return
+    // }
 
     try {
         const orders = await Order.find().sort({_id:-1}).limit(40);
@@ -156,14 +156,14 @@ exports.updateOrderStatus = async (req, res) => {
     }
 }
 
-exports.allClientsReport = async (req, res) => {
+
+
+exports.reportType1 = async (req, res) => {
     const authentic = await permissions(req, ['reports'])
     if (!(authentic)) {
         res.status(400).json({e: "there is an authentication error"})
         return
     }
-
-
 
     try {
 
@@ -172,9 +172,7 @@ exports.allClientsReport = async (req, res) => {
                 $match : { status:2}
             },
             {
-                $match :  {date : {$gt: new Date(new Date().setDate(new Date().getDate()-30))
-
-                }}
+                $match :  {date : {$gt: new Date(new Date().setDate(new Date().getDate()-30))  }}
             },
             {
                 $group: {
@@ -214,18 +212,14 @@ exports.allClientsReport = async (req, res) => {
 
 }
 
+
+//return all items and every item how many times is taken
 exports.reportByMonth = async (req, res) => {
-    const numberOfMonthFromNow = parseInt(req.params.numberOfMonthFromNow)  ;
-    if (numberOfMonthFromNow) {
-        res.status(400).json({e:'cant get month greater than this month'})
-        return 0
-    }
+    const numberOfMonthFromNow =  - (parseInt(req.params.numberOfMonthFromNow))  ;
     let date = new Date();
     let beginningOfTheMonth = new Date(date.getFullYear(),date.getMonth() + numberOfMonthFromNow , 1);
     let endOfTheMonth = new Date(date.getFullYear(),date.getMonth()+1+ numberOfMonthFromNow  , 0 , 23 , 59 , 59);
 
-
-    // console.log(beginningOfTheMonth)
     try{
         let orders =  await Order.aggregate([
             {
@@ -245,11 +239,11 @@ exports.reportByMonth = async (req, res) => {
 
 
 
-        if (!orders.length) {
+        if (!orders.length) { 
             res.status(200).json(orders)
             return 0
         }
-         let items = [] ;
+        let items = [] ;
         let itemsInAssociativeArray= [] ;
         let itemsNameWithCount = []
         for (const order of orders[0].orderItems) {
@@ -279,3 +273,52 @@ exports.reportByMonth = async (req, res) => {
      }
 }
 
+
+
+
+
+exports.MonthlyCompleteReport = async (req, res) => {
+    const numberOfMonthFromNow =  - (parseInt(req.params.numberOfMonthFromNow))  ;
+   
+    let date = new Date();
+    let beginningOfTheMonth = new Date(date.getFullYear(),date.getMonth() + numberOfMonthFromNow , 1);
+    let endOfTheMonth = new Date(date.getFullYear(),date.getMonth()+1+ numberOfMonthFromNow  , 1 , 0 , 0 , 0);
+
+    try {
+        let orders =  await Order.aggregate([
+            {
+                $match : { status:2}
+            },
+            {
+                $match :  {date : {$gt: beginningOfTheMonth , $lte: endOfTheMonth}}
+            },
+            {
+                $addFields: {
+                   "itemscount": {$sum:"$items.count"}
+                }
+             },
+             {
+                $sort:{ "date" : -1  }  
+            },
+            {
+                $group: {
+                    _id: "$client" ,
+                    orders: {$push:{items : "$items" , isGust:"$isGust" , note:"$note" ,itemscount:{$sum:"$items.count"}  , date:"$date"  } },
+                    totalItems:{$sum:"$itemscount"},
+                    ordersCount: {$sum: 1}
+                },
+            },
+             {
+                 $sort:{ "ordersCount" : -1  , "totalItems":-1 }  
+             }
+            
+        ])
+    res.status(200).json(orders)
+
+    } catch (e) {
+        console.log(e)
+        res.status(400).json(e);
+    }
+    
+
+}

@@ -12,8 +12,9 @@ router.get('/showClientOrders/:userId', OrderController.showClientOrders);
 router.get('/Completed', OrderController.showCompletedOrder);
 router.get('/Underway', OrderController.showUnderwayOrder);
 router.get('/Waiting', OrderController.showWaitingOrder);
-router.get('/AllClientsReport', OrderController.allClientsReport);
+router.get('/AllClientsReport', OrderController.reportType1);
 router.get('/ReportByMonth/:numberOfMonthFromNow', OrderController.reportByMonth);
+router.get('/MonthlyCompleteReport/:numberOfMonthFromNow', OrderController.MonthlyCompleteReport);
 
 
-module.exports = router
+module.exports = router 
