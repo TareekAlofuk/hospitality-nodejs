@@ -15,6 +15,7 @@ router.get('/Waiting', OrderController.showWaitingOrder);
 router.get('/AllClientsReport', OrderController.reportType1);
 router.get('/ReportByMonth/:numberOfMonthFromNow', OrderController.reportByMonth);
 router.get('/MonthlyCompleteReport/:numberOfMonthFromNow', OrderController.MonthlyCompleteReport);
+router.get('/RequestedItemsByClients/:numberOfMonthFromNow', OrderController.RequestedItemsByClients );
 
-
+ 
 module.exports = router 
